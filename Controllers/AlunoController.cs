@@ -34,7 +34,7 @@ namespace PrototipoKaizen.Controllers
                 return new NotFoundObjectResult("Endereço não encontrado");
             }
             
-            var aluno = new Aluno(novoAluno, endereco);
+            var aluno = new Aluno(novoAluno);
 
             _context.Alunos.Add(aluno);
             _context.SaveChanges();
@@ -76,6 +76,23 @@ namespace PrototipoKaizen.Controllers
             enderecoAtualizado.Numero = endereco.Numero;
 
             aluno.Endereco = enderecoAtualizado;
+            _context.Alunos.Update(aluno);
+            _context.SaveChanges();
+
+            return Ok(aluno);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult UpdateEmail(Guid id, UpdateEmailDto email)
+        {
+            var aluno = _context.Alunos.Find(id);
+
+            if (aluno == null)
+            {
+                return new NotFoundObjectResult("Aluno não encontrado");
+            }
+
+            aluno.Email = email.Email;
             _context.Alunos.Update(aluno);
             _context.SaveChanges();
 
