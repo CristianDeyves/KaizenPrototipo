@@ -7,13 +7,15 @@ namespace PrototipoKaizen.DTOs.Aluno
 {
     public record CreateAlunoDto
     (
-        string Nome,
-        string Email,
-        string Cpf,
-        string DataNascimento,
-        string Telefone,
-        string Cep,
-        string Complemento,
-        string Numero
+        bool Ativo = true,
+        Pessoa pessoa,
+        DateTime DataNascimento,
+        ContatoEmergencia ContatoEmergencia,
+        Responsavel Responsavel,
+        Cobranca Cobranca,
+        Mentor Mentor,
+        Guid TurmaId,
+        Turma Turma,
+        string DiasAulasContratados
     );
 }
