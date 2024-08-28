@@ -18,15 +18,17 @@ namespace PrototipoKaizen.Models
         public Mentor Mentor { get; set; }
         public Guid TurmaId { get; set; }
         public Turma Turma { get; set; }
-        public List<Aula> Aulas { get; set; }
-        public List<DiarioBordo> DiariosBordo { get; set; }
+        public List<Aula>? Aulas { get; set; }
+        public List<DiarioBordo>? DiariosBordo { get; set; }
         public string DiasAulasContratados { get; set; }
 
         public Aluno(CreateAlunoDto novoAluno)
         {
             Id = Guid.NewGuid();
             Ativo = novoAluno.Ativo;
-            Nome = novoAluno.pessoa.Nome;
+            PrimeiroNome = novoAluno.pessoa.PrimeiroNome;
+            SegundoNome = novoAluno.pessoa.SegundoNome;
+            Sobrenome = novoAluno.pessoa.Sobrenome;
             Cpf = novoAluno.pessoa.Cpf;
             Rg = novoAluno.pessoa.Rg;
             DataNascimento = novoAluno.DataNascimento;
