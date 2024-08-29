@@ -7,9 +7,9 @@ namespace PrototipoKaizen.Models
 {
     public class Responsavel : Pessoa
     {
-        public Gui Id { get; set; }
+        public Guid Id { get; set; }
         public bool Ativo { get; set; }
         public Guid ResponsavelPorTalPessoa { get; set; }
-        public string NomePessoa { get; set; }
+        public string? NomePessoaResponsabilidade { get; set; }
     }
 }
