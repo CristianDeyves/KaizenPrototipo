@@ -10,6 +10,6 @@ namespace PrototipoKaizen.Models
         public Guid Id { get; set; }
         public bool Ativo { get; set; }
         public Guid IdPessoa { get; set; }
-        public string NomePessoa { get; set; }
+        public string? NomePessoa { get; set; }
     }
 }
