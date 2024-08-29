@@ -9,7 +9,7 @@ namespace PrototipoKaizen.Models
     {
         public Guid Id { get; set; }
         public bool Ativo { get; set; }
-        public ContatoEmergencia ContatoEmergencia { get; set; }
+        public ContatoEmergencia? ContatoEmergencia { get; set; }
         public List<Mentor>? Mentores { get; set; }
         public List<Turma>? Turmas { get; set; }
         public List<Aula>? Aulas { get; set; }
