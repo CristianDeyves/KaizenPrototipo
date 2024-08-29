@@ -17,6 +17,6 @@ namespace PrototipoKaizen.Models
         public List<Aula>? Aulas { get; set; }
         public List<DiarioBordo>? DiariosBordo { get; set; }
         public List<Formacoes>? Formacoes { get; set; }
-        public string TipoMentor { get; set; }
+        public string? TipoMentor { get; set; }
     }
 }
