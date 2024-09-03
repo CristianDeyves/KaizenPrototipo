@@ -15,88 +15,71 @@ namespace PrototipoKaizen.Controllers
     [Route("aluno")]
     public class AlunoController : ControllerBase
     {
-        private readonly EnderecoService _enderecoService;
-        private readonly KaizenContext _context;
+        private readonly IAlunoService _alunoService;
 
-        public AlunoController(EnderecoService enderecoService, KaizenContext context)
+        public AlunoController(IAlunoService alunoService)
         {
-            _enderecoService = enderecoService;
-            _context = context;
+            _alunoService = alunoService;
         }
 
         [HttpPost]
-        public IActionResult Create(CreateAlunoDto novoAluno)
+        public async Task<IActionResult> Create(CreateAlunoDto novoAluno)
         {
-            var endereco = _enderecoService.BuscarEnderecoPorAluno(novoAluno);
-
-            if (endereco == null)
+            try
             {
-                return new NotFoundObjectResult("Endereço não encontrado");
+                var aluno = await _alunoService.CreateAlunoAsync(novoAluno);
+                return CreatedAtAction(nameof(GetById), new { id = aluno.Id }, aluno);
             }
-            
-            var aluno = new Aluno(novoAluno);
-
-            _context.Alunos.Add(aluno);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetById), new { id = aluno.Id }, aluno);
+            catch (EnderecoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var aluno = _context.Alunos.Find(id);
-
-            if (aluno == null)
+            try
             {
-                return new NotFoundObjectResult("Aluno não encontrado");
+                var aluno = await _alunoService.GetAlunoByIdAsync(id);
+                return Ok(aluno);
             }
-
-            return Ok(aluno);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
-        
+
         [HttpPut("endereco/{id}")]
-        public IActionResult UpdateEndereco(Guid id, AtualizarEnderecoDto endereco)
+        public async Task<IActionResult> UpdateEndereco(Guid id, AtualizarEnderecoDto endereco)
         {
-            var aluno = _context.Alunos.Find(id);
-
-            if (aluno == null)
+            try
             {
-                return new NotFoundObjectResult("Aluno não encontrado");
+                var aluno = await _alunoService.UpdateEnderecoAsync(id, endereco);
+                return Ok(aluno);
             }
-            
-            var enderecoAtualizado = _enderecoService.BuscarEnderecoPorCep(endereco.Cep);
-
-            if (enderecoAtualizado == null)
+            catch (KeyNotFoundException ex)
             {
-                return new NotFoundObjectResult("Endereço não encontrado");
+                return NotFound(ex.Message);
             }
-
-            enderecoAtualizado.Complemento = endereco.Complemento;
-            enderecoAtualizado.Numero = endereco.Numero;
-
-            aluno.Endereco = enderecoAtualizado;
-            _context.Alunos.Update(aluno);
-            _context.SaveChanges();
-
-            return Ok(aluno);
+            catch (EnderecoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult UpdateEmail(Guid id, UpdateEmailDto email)
+        [HttpPut("email/{id}")]
+        public async Task<IActionResult> UpdateEmail(Guid id, UpdateEmailDto email)
         {
-            var aluno = _context.Alunos.Find(id);
-
-            if (aluno == null)
+            try
             {
-                return new NotFoundObjectResult("Aluno não encontrado");
+                var aluno = await _alunoService.UpdateEmailAsync(id, email);
+                return Ok(aluno);
             }
-
-            aluno.Email = email.Email;
-            _context.Alunos.Update(aluno);
-            _context.SaveChanges();
-
-            return Ok(aluno);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
