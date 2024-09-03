@@ -9,31 +9,33 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PrototipoKaizen.Exceptions;
 using PrototipoKaizen.DTOs.Aluno;
+using Microsoft.Extensions.Http;
 
 namespace PrototipoKaizen.Services
 {
     public class EnderecoService
     {
+        public const string ViaCepUrl = nameof(EnderecoService);
         private readonly HttpClient _httpClient;
 
-        public EnderecoService(HttpClient httpClient)
+        public EnderecoService(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient(ViaCepUrl);
         }
 
-        public Endereco BuscarEnderecoPorAluno(CreateAlunoDto aluno)
+        public async Task<Endereco> BuscarEnderecoPorAluno(CreateAlunoDto aluno)
         {
-            var response = _httpClient.GetAsync($"https://viacep.com.br/ws/{aluno.Cep}/json").Result;
+            var response = await _httpClient.GetAsync($"/{aluno.Cep}/json");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new EnderecoNaoEncontradoException("Erro ao buscar endereço: {response.StatusCode}");
             }
 
-            var content = response.Content.ReadAsStringAsync().Result;
+            var content = await response.Content.ReadAsStringAsync();
 
             var json = JObject.Parse(content);
-            if (json.ContainsKey("erro") && json["erro"]?.Value<bool>() == true)
+            if (json.ContainsKey("erro") && json["erro"]?.Value<bool>())
             {
                 throw new EnderecoNaoEncontradoException();
             }
@@ -50,19 +52,19 @@ namespace PrototipoKaizen.Services
             return endereco;
         }
 
-        public Endereco BuscarEnderecoPorCep(string cep)
+        public async Task<Endereco> BuscarEnderecoPorCep(string cep)
         {
-            var response = _httpClient.GetAsync($"https://viacep.com.br/ws/{cep}/json").Result;
+            var response = await _httpClient.GetAsync($"/{cep}/json");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new EnderecoNaoEncontradoException("Erro ao buscar endereço: {response.StatusCode}");
             }
 
-            var content = response.Content.ReadAsStringAsync().Result;
+            var content = await response.Content.ReadAsStringAsync();
 
             var json = JObject.Parse(content);
-            if (json.ContainsKey("erro") && json["erro"]?.Value<bool>() == true)
+            if (json.ContainsKey("erro") && json["erro"]?.Value<bool>())
             {
                 throw new EnderecoNaoEncontradoException();
             }
