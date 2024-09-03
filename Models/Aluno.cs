@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PrototipoKaizen.DTOs.Aluno;
 
-namespace PrototipoKaizen.Models
+namespace PrototipoKaizen.Models.Aluno
 {
     public class Aluno : Pessoa
     {
