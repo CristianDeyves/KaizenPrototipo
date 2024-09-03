@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15
+    container_name: kaizen-postgres
+    environment:
+      POSTGRES_USER: kaizen_user
+      POSTGRES_PASSWORD: kaizen_password
+      POSTGRES_DB: kaizen
+    volumes:
+      - ../db-kaizen:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - kaizen-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: kaizen-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@kaizen.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - kaizen-net
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  pgadmin-data:
+
+networks:
+  kaizen-net:
+    driver: bridge
